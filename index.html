@@ -459,7 +459,7 @@ function generateOutput(machine, r, fields) {
     const isUribou = r.tenseiType === 'uribou';
     const isRassher = r.tenseiType === 'rassher';
     const tenseiLabel = isUribou ? "転生　ウリ坊" : isRassher ? "転生　ラッシャー" : "転生　イノシシ";
-    const sub = r.kikaiwari || (isUribou ? 99 : isRassher ? 101 : 106);
+    const sub = r.kikaiwari || (isUribou ? 98 : isRassher ? 101 : 106);
     return `機種番号3818\n計算条件1\n(${tenseiLabel})\n(1:RB 2:AT)\n\n機械割#${sub}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryTensei(r)}\n\n天井消化${r.diff || ""}\n着席時回転数${r.start}\n着席時総回転数${r.total_start}\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
   }
   if (machine === "ghoul") {
@@ -570,7 +570,7 @@ function App() {
     if (memo.trim()) {
       const r = parseMemoText(memo, machine);
       setParsed(r);
-      if (r.chodama) setPrevInput(r.chodama);
+      if (r.chodama === "0") setPrevInput("");else if (r.chodama) setPrevInput(r.chodama);
       if (r.shop) setShop(r.shop);
       if (r.name) setName(r.name);
     } else {
@@ -602,7 +602,7 @@ function App() {
       return;
     }
     setErrorMsg("");
-    const prevVal = prevInput || savedZand || "";
+    const prevVal = parsed.chodama === "0" ? "" : (prevInput || savedZand || "");
     const out = generateOutput(machine, parsed, {
       shop,
       name,
