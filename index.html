@@ -83,7 +83,7 @@ const MACHINE_INFO = {
   },
   karakuri2: {
     num: "3818",
-    name: "からくりサーカス2"
+    name: "からサー2"
   }
 };
 const PLACEHOLDERS = {
@@ -93,7 +93,7 @@ const PLACEHOLDERS = {
   ghoul: "東京喰種\n台番201\n始め50\n総回800\nリセ\n1スルー\n天井消化200\n抜け1500\n獲得300#200\n現金10000\n連荘2#1\nヤメ180(180)\n総回1200",
   tekken: "鉄拳\n台番201\n始め50\n総回800\nリセ\n1スルー\n天井消化200\n150ラッシュ\n抜け1500\n獲得300#200\n現金10000\n連荘2#1\nヤメ180(180)\n総回1200",
   god: "ミリオンゴッド\n店名UNO鶴見\n台番289\n始め37\n前回GOD揃い後\nユニメモ済み\n貯玉4935\n1179\n抜け4121\n獲得1077\n現金\n総額38000\n連荘3\nヤメ37\n総回1377",
-  karakuri2: "からくりサーカス2\n台番201\n始め50\n総回800\n赤いボール\n抜け1500\n獲得300#200\n現金10000\n連荘2#1\nヤメ180\n総回1200"
+  karakuri2: "からサー2\n台番201\n始め50\n総回800\n赤いボール\n抜け1500\n獲得300#200\n現金10000\n連荘2#1\nヤメ180\n総回1200"
 };
 const HINTS = {
   hokuto: "以下の形式で貼り付けると自動解析します",
@@ -102,10 +102,10 @@ const HINTS = {
   ghoul: "東京喰種用。「リセ」or「AT間」、「Nスルー」、「天井消化NNN」を記載",
   tekken: "鉄拳用。BB単体=数字のみ、BB+ラッシュ=数字ラッシュ（例: 150ラッシュ）",
   god: "ミリオンゴッド用。前回の状態（VVV/Z-ZONE/赤7/天井/GOD/前々回赤7）を記載",
-  karakuri2: "からくりサーカス2用。『赤いボール』『リセ、AT後3スルー』『リセ、AT後4スルー』を自動判定します"
+  karakuri2: "からサー2用。『赤いボール』『リセ、AT後3スルー』『リセ、AT後4スルー』を自動判定します"
 };
 
-// ── からくりサーカス2 判定ルール ─────────────
+// ── からサー2 判定ルール ─────────────
 const KARAKURI2_RULES = [
   { key: "red_ball", label: "赤いボール", rate: "103.5", test: text => text.includes("赤いボール") },
   { key: "reset_at_4", label: "リセ、AT後4スルー", rate: "135", test: text => /リセ.*AT後4スルー/.test(text) },
@@ -473,7 +473,7 @@ function generateOutput(machine, r, fields) {
     return `機種番号3818\n計算条件1\n(鉄拳　${ml})\n(1:BB 2:AT)\n\n等価期待値${kitai}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryTekken(r)}\n\n着席時回転数${r.start}\n着席時総回転数\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
   }
   if (machine === "karakuri2") {
-    return `機種番号3818\n計算条件1\n(からくりサーカス2 ${r.karakuri2Label || ""})\n(1:RB 2:ART)\n\n機械割#${r.kikaiwari || ""}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryGhoul(r)}\n\n着席時回転数${r.start}\n着席時総回転数${r.total_start}\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
+    return `機種番号3818\n計算条件1\n(からサー2 ${r.karakuri2Label || ""})\n(1:RB 2:ART)\n\n機械割#${r.kikaiwari || ""}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryGhoul(r)}\n\n着席時回転数${r.start}\n着席時総回転数${r.total_start}\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
   }
   if (machine === "god") {
     const godTotalStartLine = r.totalCount >= 2 ? r.total_start : "";
