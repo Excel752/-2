@@ -257,13 +257,13 @@ function parseMemoText(text, machine) {
           type: "bb"
         });
       }
-    } else if (machine === "ghoul" && /^\d/.test(line) && !/^(始め|差枚|総回|抜け|獲得|現金|連荘|ヤメ|台番|総額|貯玉|持込|持出|\d+スルー|\d+%|天井|リセ|AT間)/.test(line)) {
+    } else if ((machine === "ghoul" || machine === "karakuri2") && /^\d/.test(line) && !/^(始め|差枚|総回|抜け|獲得|現金|連荘|ヤメ|台番|総額|貯玉|持込|持出|\d+スルー|\d+(?:\.\d+)?%|天井|リセ|AT間)/.test(line)) {
       if (!r.ghoulHitsRaw) r.ghoulHitsRaw = line;else r.ghoulHitsRaw += "#" + line;
     } else if (machine === "tensei" && /^\d/.test(line) && !/^(始め|差枚|総回|抜け|獲得|現金|連荘|ヤメ|台番|総額|貯玉|持込|持出|\d+スルー|\d+%|天井)/.test(line)) {
       if (!r.hitsRaw) r.hitsRaw = line;else r.hitsRaw += "#" + line;
       const m = line.match(/^(\d+)/);
       if (m) r.hit = parseInt(m[1]);
-    } else if ((machine === "hokuto" || machine === "monkey" || machine === "karakuri2") && /^\d/.test(line) && !/^(始め|差枚|総回|抜け|獲得|現金|連荘|ヤメ|台番|総額|貯玉|持込|持出|\d+スルー|\d+(?:\.\d+)?%|天井)/.test(line)) {
+    } else if ((machine === "hokuto" || machine === "monkey") && /^\d/.test(line) && !/^(始め|差枚|総回|抜け|獲得|現金|連荘|ヤメ|台番|総額|貯玉|持込|持出|\d+スルー|\d+(?:\.\d+)?%|天井)/.test(line)) {
       if (!r.hitsRaw) r.hitsRaw = line;else r.hitsRaw += "#" + line;
       const m = line.match(/^(\d+)/);
       if (m) r.hit = parseInt(m[1]);
@@ -473,7 +473,7 @@ function generateOutput(machine, r, fields) {
     return `機種番号3818\n計算条件1\n(鉄拳　${ml})\n(1:BB 2:AT)\n\n等価期待値${kitai}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryTekken(r)}\n\n着席時回転数${r.start}\n着席時総回転数\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
   }
   if (machine === "karakuri2") {
-    return `機種番号3818\n計算条件1\n(からくりサーカス2 ${r.karakuri2Label || ""})\n(1:RB 2:ART)\n\n機械割#${r.kikaiwari || ""}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistory(r)}\n\n着席時回転数${r.start}\n着席時総回転数${r.total_start}\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
+    return `機種番号3818\n計算条件1\n(からくりサーカス2 ${r.karakuri2Label || ""})\n(1:RB 2:ART)\n\n機械割#${r.kikaiwari || ""}\n仕事量同集計\n総回転数${r.total_end}\n\n獲得玉###${r.getRaw || ""}\n\n残玉${r.zandama}\n貯玉${prev}${mochikomi}${mochidashi}\n現金${cash}\n\n${buildHistoryGhoul(r)}\n\n着席時回転数${r.start}\n着席時総回転数${r.total_start}\n換金率${kinsen1}#${kinsen2}\n貸玉${kashi1}#${kashi2}${footer ? "\n\n" + footer : ""}`;
   }
   if (machine === "god") {
     const godTotalStartLine = r.totalCount >= 2 ? r.total_start : "";
